@@ -1,0 +1,38 @@
+name: Update Version and Build Zip Asset
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
+    - name: Update version string in Controller.php
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "const VERSION = '[^']*';"
+        replace: "const VERSION = '${{ github.event.release.tag_name }}';"
+        include: "core/Controller.php"
+
+    - name: Commit and Push automatically updated version
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "chore: auto-update framework version to ${{ github.event.release.tag_name }} [skip ci]"
+        file_pattern: 'core/Controller.php'
+        branch: main
+
+    - name: Update tag to include version change
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@://github.com"
+        git tag -f ${{ github.event.release.tag_name }}
+        git push origin ${{ github.event.release.tag_name }} --force
