@@ -35,4 +35,21 @@
 .error-content .btn {
     display: inline-block;
     width: auto;
+    color: white;
+}
+
+.hover:hover {
+    opacity: 0.7;
+}
+
+.active1 {
+    text-decoration: underline !important;
+}
+
+main {
+    min-height: 100vh;
+}
+
+.none {
+    text-decoration: none;
 }
