@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Core\Helpers;
 
@@ -15,7 +15,7 @@ class Image
                 $uploadDir = 'assets/img/avatar/';          // Путь сохранения файла
                 $white_extension = ['jpg', 'png'];         // Разрешённые типы файла
                 $user_name = $_SESSION['user']['login'];  // Логин пользователя
-                $user_id = $_SESSION['user']['id'];      // ID пользователя
+                $user_id = $_SESSION['user']['id'];      // ID пользователя       
 
                 if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);  // Создаём папку аватарок если нету
 
@@ -64,19 +64,21 @@ class Image
         return 'assets/img/avatar/default.svg';
     }
 
-    public static function delete($connect) 
+    public static function delete($connect, $user_id = null, $uploadDir = 'assets/img/avatar/') 
     {
-        $user_id = $_SESSION['user']['id'];
+        if ($user_id === null) {
+            $user_id = $_SESSION['user']['id'];
+        }
 
         $stmt = $connect->prepare("SELECT * FROM `avatar` WHERE `user_id` = ? LIMIT 1");  // Проверяем на существование названия в БД
         $stmt->execute([$user_id]);
         $row = $stmt->fetch();
 
         if ($row) {
-            $uploadDir = 'assets/img/avatar/';
-
             $oldFile = $uploadDir . $row['name'];                                     // Путь к старому файлу
-            if (file_exists($oldFile)) unlink($oldFile);                             // Проверяем на существование и удаляем
+            if (file_exists($oldFile)) {
+                unlink($oldFile);                                                     // Проверяем на существование и удаляем
+            }
             $stmt = $connect->prepare("DELETE FROM `avatar` WHERE `user_id` = ?");  // Удаляем в БД
             $stmt->execute([$user_id]);
         }

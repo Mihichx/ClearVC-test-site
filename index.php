@@ -1,6 +1,12 @@
 <?php
 
-session_start();
+// Защита сессионных кук от чтения через JavaScript
+ini_set('session.cookie_httponly', 1);
+
+// Запуск сессии (если он у вас обернут в проверку статуса)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
 

@@ -1,14 +1,14 @@
 <div id="carouselExampleIndicators" class="carousel slide">
   <div class="carousel-inner mt-5">
-    <? foreach($stock as $index => $row): ?>
-      <div class="carousel-item text-center p-5 <?= ($index === 0) ? 'active' : '' ?> bg-dark">
+    <?php foreach($stock as $key => $row): ?>
+      <div class="carousel-item text-center p-5 <?= ($key === 0) ? 'active' : '' ?> bg-dark">
         <a class="text-white d-block hover" href="/stock">
           <img src="/assets/img/ghost.jpg" class="d-block m-auto rounded" style="width: 300px;" alt="...">
           <h3><?= htmlspecialchars($row['name']) ?></h3>
           <h5><?= htmlspecialchars($row['description']) ?></h5>
         </a>
       </div>
-    <? endforeach; ?>
+    <?php endforeach; ?>
   </div>
 
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -24,14 +24,14 @@
 <div class="mt-5">
   <div class="container">
     <div class="row">
-      <? foreach($about as $row): ?>
+      <?php foreach($about as $row): ?>
         <div class="col-6">
           <div class="bg-dark p-5 text-white text-break rounded">
             <h3><?= htmlspecialchars($row['name']) ?></h3>
             <h5><?= htmlspecialchars($row['description']) ?></h5>
           </div>
         </div>
-      <? endforeach; ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
@@ -40,7 +40,7 @@
   <h3 class="text-white text-center">Популярные товары</h3>
   <div class="container py-5">
     <div class="row g-5">
-      <? foreach($items as $row): ?>
+      <?php foreach($items as $row): ?>
         <div class="col-6 col-md-4">
           <div class="card rounded">
             <img src="/assets/img/ghost.jpg" class="card-img-top" alt="...">
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-      <? endforeach; ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
@@ -62,7 +62,7 @@
   <h3 class="text-dark text-center">Новинки</h3>
   <div class="container">
     <div class="row g-5">
-      <? foreach($items1 as $row): ?>
+      <?php foreach($items1 as $row): ?>
         <div class="col-6 col-md-4">
           <div class="bg-dark p-5 text-white text-break rounded">
             <form action="/catalog" method="POST">
@@ -74,7 +74,7 @@
             </form>
           </div>
         </div>
-      <? endforeach; ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
@@ -83,7 +83,7 @@
   <h3 class="text-white text-center">Наши отзывы</h3>
   <div class="container py-5">
     <div class="row g-5">
-      <? foreach($reviews as $row): ?>
+      <?php foreach($reviews as $row): ?>
         <div class="col-6 col-md-4">
           <div class="card rounded text-center"">
             <div class="card-body text-center">
@@ -96,7 +96,7 @@
             </div>
           </div>
         </div>
-      <? endforeach; ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>

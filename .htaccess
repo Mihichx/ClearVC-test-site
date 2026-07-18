@@ -1,9 +1,20 @@
+# Запрет отображения структуры папок и доступа к config
+Options -Indexes
+RedirectMatch 404 ^/config(/|$)
+
+# Защита от clickjacking (добавляет заголовок, который требовал Nikto)
+Header set X-Frame-Options "DENY"
+
+# --- Далее идет ваш стандартный код перенаправления ---
 RewriteEngine On
 
-RewriteCond %{REQUEST_URI} \.(css|js|jpg|png|gif|svg)$ [NC]
-RewriteCond %{HTTP_REFERER} !^https?://(www\.)?localhost [NC]
-RewriteRule .* - [F,L]
+# Запрет запросов, содержащих подозрительные слэши или пути к файлам
+RewriteCond %{THE_REQUEST} \s/{2,}[^\s]*\s [OR]
+RewriteCond %{REQUEST_URI} (etc|hosts|passwd) [NC]
+RewriteRule ^ - [F,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
+
+php_value session.cookie_httponly 1

@@ -15,7 +15,11 @@ if (file_exists($configPath)) {
             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connect->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("[" . date('Y-m-d H:i:s') . "] Предупреждение БД: " . $e->getMessage() . PHP_EOL, 3, __DIR__ . '/db_errors.log');
+            echo "<div style='padding:20px; background:#ffdddd; color:#aa0000; border:1px solid #cc0000; font-family:sans-serif;'>";
+            echo "<h2> Ошибка подключения к базе данных:</h2>";
+            echo "<code>" . htmlspecialchars($e->getMessage()) . "</code>";
+            echo "</div>";
+            exit;
         }
     }
 }

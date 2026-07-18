@@ -45,6 +45,14 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $uri = rtrim($uri, '/');
+
+        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+        if ($scriptName !== '/' && strpos($uri, $scriptName) === 0) {
+            $uri = substr($uri, strlen($scriptName));
+            if ($uri === '') {
+                $uri = '/';
+            }
+        }
         
         foreach ($this->routes as $route) {
             if ($route['method'] !== $method) {
@@ -57,7 +65,7 @@ class Router
                 continue;
             }
             $routePath = rtrim($route['path'], '/');
-            $pattern = '#^' . preg_replace('/\{([a-z]+)\}/', '([^/]+)', $routePath) . '$#';
+            $pattern = '#^' . preg_replace('/\{([a-z]+)\}/', '([^/]+)', $routePath) . '/?$#';
             
             if (preg_match($pattern, $uri, $matches)) {
                 array_shift($matches);

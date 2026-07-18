@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace App\Controllers;
 
@@ -10,9 +10,9 @@ class ProfileController extends Controller
     public function auth($stmt)
     {
         $_SESSION['user'] = [
-            'id'    => $stmt[0]['id'],
-            'login' => $stmt[0]['login'],
-            'role' => $stmt[0]['role'],
+            'id'    => $stmt['id'],
+            'login' => $stmt['login'],
+            'role' => $stmt['role'],
             'basket'=> []
         ];
     }
@@ -75,11 +75,11 @@ class ProfileController extends Controller
         
         $stmt = $this->db->prepare("SELECT * FROM `users` WHERE `login` = ?");
         $stmt->execute([$name]);
-        $stmt = $stmt->fetchAll();
+        $stmt = $stmt->fetch();
 
         if ($stmt) {
             $password = $_POST['password'];
-            $hashPassword = $stmt[0]['password'];
+            $hashPassword = $stmt['password'];
 
             if (password_verify($password, $hashPassword)) {
                 $this->auth($stmt);
@@ -127,7 +127,7 @@ class ProfileController extends Controller
         $name = $_POST['name'];
         $stmt = $this->db->prepare("SELECT * FROM `users` WHERE `login` = ?");
         $stmt->execute([$name]);
-        $stmt = $stmt->fetchAll();
+        $stmt = $stmt->fetch();
 
         if ($stmt) { 
             $_SESSION['error'] = 'Логин занят';
@@ -146,7 +146,13 @@ class ProfileController extends Controller
         $stmt1 = $this->db->prepare("INSERT INTO `users`(`login`, `password`, `role_id`) VALUES (?, ?, ?)");
         $stmt1->execute([$name, password_hash($password, PASSWORD_DEFAULT), 1]);
 
+        $name = $_POST['name'];
+        $stmt = $this->db->prepare("SELECT * FROM `users` WHERE `login` = ?");
+        $stmt->execute([$name]);
+        $stmt = $stmt->fetch();
+
         $this->auth($stmt);
+
         unset($_SESSION['error']);
         header('Location: /profile');
         exit;
