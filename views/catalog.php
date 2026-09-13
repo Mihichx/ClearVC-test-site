@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="row g-5 mt-5">
-        <? foreach ($products as $item): ?>
+        <?php foreach ($products as $item): ?>
             <div class="col-4 text-white">
                 <div class="bg-dark p-5 rounded">
                     <form method="POST">
@@ -34,7 +34,7 @@
                     </form>
                 </div>
             </div>
-        <? endforeach; ?>
+        <?php endforeach; ?>
     </div>
 </div>
 <!-- ... Ваш существующий код (строки 1-38) ... -->
@@ -86,4 +86,3 @@
     <?php endif; ?>
 
 </div> <!-- Самый последний закрывающий контейнер (строка 39) -->
-

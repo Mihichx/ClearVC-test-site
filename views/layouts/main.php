@@ -37,7 +37,8 @@
             <script src="/assets/js/<?= htmlspecialchars($jsItem) ?>" defer></script>
         <?php endforeach; ?>
     <?php endif; ?>
-    
+
+    <?php $search = $_SERVER['REQUEST_URI']; ?> 
 </head>
 <body>
     <!---------------------------------------------------Шапка--------------------------------------------------->
@@ -73,6 +74,7 @@
             <a href="https://telegram.com" target="_blank"><i class="fab fa-telegram text-white fs-2 hover"></i></a>
             <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube text-white fs-2 hover"></i></a>
         </div>
+        <p class="text-white-50 fs-6 m-0 mt-4">Powered by ClearVC <?= \Core\Controller::VERSION ?></p>
     </footer>
 
     <!--Bootstrap JS-->
