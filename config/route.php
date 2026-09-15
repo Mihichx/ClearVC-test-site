@@ -47,11 +47,6 @@ return [
     ['/img', 'ImgController@img', 'GET'],
     ['/img', 'ImgController@img', 'POST'],
     
-    // Тестовые роуты (Q)
-    ['/q', 'qController@q', 'GET'],
-    ['/q', 'qController@w', 'POST'],
-    ['/q', 'qController@e', 'POST'],
-    
     // Динамический fallback (маска '*')
     ['*', 'DYNAMIC_MODULES_FALLBACK', 'GET'],
     ['*', 'DYNAMIC_MODULES_FALLBACK', 'POST'],

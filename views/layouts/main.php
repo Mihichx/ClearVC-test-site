@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" href="/assets/img/ghost.jpg">
     
     <!--CSS-->
-    <link rel="stylesheet" href="/assets/css/style.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 
     <!--Bootstrap CSS-->
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="/assets/fontAwesome/css/all.css">
 
     <!--JS общий для всех страниц-->
-    <script async src="/assets/js/script.min.js" defer></script>
+    <script async src="/assets/js/script.js"></script>
 
     <!-- js рендера (подставляется отдельно для каждой страницы) -->
     <?php if (!empty($js)): ?>
