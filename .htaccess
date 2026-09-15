@@ -1,30 +1,44 @@
-# Запрет отображения структуры папок и доступа к config
+# 1. Запрет отображения структуры папок
 Options -Indexes
-RedirectMatch 404 ^/config(/|$)
 
-# --- Далее идет ваш стандартный код перенаправления ---
+# 2. Основной роутинг ClearVC и перехват запрещенных папок
 RewriteEngine On
 
-# Запрет запросов, содержащих подозрительные слэши или пути к файлам
+# Если пользователь пытается открыть config, core, controllers или views напрямую —
+# принудительно отправляем его на роутер с фейковым адресом /error-404
+RewriteRule ^(config|core|controllers|views)(/|$) index.php [QSA,L]
+
+# Запрет подозрительных запросов (сдвоенные слэши, системные файлы Linux)
 RewriteCond %{THE_REQUEST} \s/{2,}[^\s]*\s [OR]
 RewriteCond %{REQUEST_URI} (etc|hosts|passwd) [NC]
 RewriteRule ^ - [F,L]
 
+# Если запрос идет к реальному файлу или папке (например, в assets) — отдаем напрямую
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
 
+# В ином случае перенаправляем всё на корневую точку входа index.php
+RewriteRule ^(.*)$ index.php [QSA,L]    
+
+# Запрет подозрительных запросов (сдвоенные слэши, системные файлы)
+RewriteCond %{THE_REQUEST} \s/{2,}[^\s]*\s [OR]
+RewriteCond %{REQUEST_URI} (etc|hosts|passwd) [NC]
+RewriteRule ^ - [F,L]
+
+# Если запрос идет к реальному файлу или папке в public — отдаем его напрямую
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# В ином случае перенаправляем всё на единую точку входа index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# 3. Безопасность сессий PHP
 php_value session.cookie_httponly 1
 
-# --- Блок кэширования (Сроки) ---
+# 4. Блок кэширования (Сроки)
 <IfModule mod_expires.c>
     ExpiresActive On
-    
-    # Кэширование JavaScript и CSS на 1 неделю
     ExpiresByType text/css "access plus 1 week"
     ExpiresByType application/javascript "access plus 1 week"
-    
-    # Кэширование изображений на 1 месяц
     ExpiresByType image/jpeg "access plus 1 month"
     ExpiresByType image/png "access plus 1 month"
     ExpiresByType image/webp "access plus 1 month"
@@ -32,24 +46,22 @@ php_value session.cookie_httponly 1
     ExpiresByType image/x-icon "access plus 1 month"
 </IfModule>
 
-# --- Блок управления заголовками (Кэш и Безопасность) ---
+# 5. Блок заголовков (Безопасность и Cache-Control)
 <IfModule mod_headers.c>
-    # Защита от clickjacking (перенесено сюда для безопасности сервера)
+    # Защита от clickjacking и MIME-sniffing
     Header set X-Frame-Options "DENY"
-    
-    # Защита от подмены типов файлов (MIME-sniffing)
     Header set X-Content-Type-Options "nosniff"
 
-    # 1. Отдельно для стилей и скриптов (1 неделя = 604800 секунд)
+    # Контроль кэша для CSS и JS (1 неделя)
     <FilesMatch "\.(css|js)$">
         Header set Cache-Control "public, max-age=604800, must-revalidate"
     </FilesMatch>
 
-    # 2. Отдельно для картинок и иконок (1 месяц = 2592000 секунд)
+    # Контроль кэша для изображений (1 месяц)
     <FilesMatch "\.(jpg|jpeg|png|webp|gif|ico)$">
         Header set Cache-Control "public, max-age=2592000, must-revalidate"
     </FilesMatch>
 
-    # Включаем ETag для валидации изменений
+    # Валидация изменений
     FileETag MTime Size
 </IfModule>
