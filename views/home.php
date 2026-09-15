@@ -3,7 +3,10 @@
     <?php foreach($stock as $key => $row): ?>
       <div class="carousel-item text-center p-5 <?= ($key === 0) ? 'active' : '' ?> bg-dark">
         <a class="text-white d-block hover" href="/stock">
-          <img src="/assets/img/ghost.jpg" class="d-block m-auto rounded" style="width: 300px;" alt="...">
+          <picture>
+            <source srcset="/assets/img/<?= $row['img_jpg'] ?>" type="image/jpeg">
+            <img src="/assets/img/<?= $row['img_png'] ?>" class="d-block m-auto rounded" style="width: 300px;" alt="..." loading="lazy">
+          </picture>
           <h3><?= htmlspecialchars($row['name']) ?></h3>
           <h5><?= htmlspecialchars($row['description']) ?></h5>
         </a>
@@ -67,7 +70,10 @@
           <div class="bg-dark p-5 text-white text-break rounded">
             <form action="/catalog" method="POST">
               <input type="hidden" name="id_product" value="<?= $row['id'] ?>">
-              <img src="/assets/img/ghost.jpg" class="card-img-top" alt="...">
+              <picture>
+                <source srcset="/assets/img/<?= $row['img_jpg'] ?>" type="image/jpeg">
+                <img src="/assets/img/<?= $row['img_png'] ?>" class="card-img-top" alt="..." loading="lazy">
+              </picture>
               <h3><?= htmlspecialchars($row['title']) ?></h3>
               <h5><?= htmlspecialchars($row['small-description']) ?></h5>
               <button class="btn btn-primary" type="submit">Добавить</button>

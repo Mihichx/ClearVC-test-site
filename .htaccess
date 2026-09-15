@@ -2,9 +2,6 @@
 Options -Indexes
 RedirectMatch 404 ^/config(/|$)
 
-# Защита от clickjacking (добавляет заголовок, который требовал Nikto)
-Header set X-Frame-Options "DENY"
-
 # --- Далее идет ваш стандартный код перенаправления ---
 RewriteEngine On
 
@@ -18,3 +15,41 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
 
 php_value session.cookie_httponly 1
+
+# --- Блок кэширования (Сроки) ---
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Кэширование JavaScript и CSS на 1 неделю
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    
+    # Кэширование изображений на 1 месяц
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 month"
+</IfModule>
+
+# --- Блок управления заголовками (Кэш и Безопасность) ---
+<IfModule mod_headers.c>
+    # Защита от clickjacking (перенесено сюда для безопасности сервера)
+    Header set X-Frame-Options "DENY"
+    
+    # Защита от подмены типов файлов (MIME-sniffing)
+    Header set X-Content-Type-Options "nosniff"
+
+    # 1. Отдельно для стилей и скриптов (1 неделя = 604800 секунд)
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=604800, must-revalidate"
+    </FilesMatch>
+
+    # 2. Отдельно для картинок и иконок (1 месяц = 2592000 секунд)
+    <FilesMatch "\.(jpg|jpeg|png|webp|gif|ico)$">
+        Header set Cache-Control "public, max-age=2592000, must-revalidate"
+    </FilesMatch>
+
+    # Включаем ETag для валидации изменений
+    FileETag MTime Size
+</IfModule>

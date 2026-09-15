@@ -12,7 +12,7 @@ class ProfileController extends Controller
         $_SESSION['user'] = [
             'id'    => $stmt['id'],
             'login' => $stmt['login'],
-            'role' => $stmt['role'],
+            'role' => $stmt['role_id'],
             'basket'=> []
         ];
     }
