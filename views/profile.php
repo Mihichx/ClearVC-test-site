@@ -3,6 +3,5 @@
     <a href="/img">Изменить аватарку</a>
 </div>
 <form method="POST">
-
     <button type="submit" class="btn btn-primary mt-3 d-block mx-auto">Удалить аватарку</button>
 </form>

@@ -27,7 +27,7 @@ class CatalogController extends Controller
         $total_elements = (int)$countStmt->fetchColumn();
 
         // --- 3. Настройки пагинации ---
-        $limit = 2; 
+        $limit = 2;
         $total_pages = ceil($total_elements / $limit);
         if ($total_pages < 1) $total_pages = 1;
 
@@ -52,7 +52,7 @@ class CatalogController extends Controller
         $dataQuery .= " LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($dataQuery);
-        
+
         // Привязываем параметры фильтрации
         foreach ($params as $key => $val) {
             $stmt->bindValue(':' . $key, $val);
@@ -60,7 +60,7 @@ class CatalogController extends Controller
         // Важно: для LIMIT и OFFSET нужно явно указать тип PARAM_INT
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        
+
         $stmt->execute();
         $products = $stmt->fetchAll();
 

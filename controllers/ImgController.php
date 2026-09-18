@@ -8,7 +8,7 @@ use Core\Helpers\Image;
 class ImgController extends Controller
 {
     public function img()
-    {   
+    {
         $status = Image::load($this->db);
 
         $this->render('img', [

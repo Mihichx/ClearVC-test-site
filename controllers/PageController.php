@@ -7,8 +7,8 @@ use Core\Controller;
 /**
  * Контроллер для обработки основных и динамических страниц сайта.
  */
-class PageController extends Controller 
-{  
+class PageController extends Controller
+{
     /**
      * Отображает страницу документации ClearMVC.
      * 

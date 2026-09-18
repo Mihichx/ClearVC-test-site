@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         $stmt = $this->db->query("SELECT * FROM reviews WHERE agreed = 1 ORDER BY `reviews`.`id` DESC LIMIT 3");
         $reviews = $stmt->fetchAll();
-        
+
         $this->render('home', [
             'title' => 'Главная',
             'stock' => $stock,
@@ -33,26 +33,12 @@ class HomeController extends Controller
         ]);
     }
 
-    public function store() {
+    public function store()
+    {
         if (!empty($_POST['name']) && !empty($_POST['number'])) {
             $name = $_POST['name'];
             $number = $_POST['number'];
-            
-            $stmt = $this->db->prepare("INSERT INTO `help`(`name`, `number`) VALUES (?, ?)");
-            $stmt->execute([$name, $number]);
 
-            header('Location: /');
-            exit;
-        } else {
-            header('Location: /');
-            exit;
-        }
-    }
-
-    public function store1() {
-        if (!empty($_POST['id_product'])) {
-            $id_product = $_POST['id_product'];
-            
             $stmt = $this->db->prepare("INSERT INTO `help`(`name`, `number`) VALUES (?, ?)");
             $stmt->execute([$name, $number]);
 

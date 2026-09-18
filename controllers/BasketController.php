@@ -24,16 +24,16 @@ class BasketController extends Controller
             $content = "";
             $sum = 0;
             foreach ($_SESSION['basket'] as $id => $quantity) {
-                $sum += $products[$id-1]['price'] * $quantity;
+                $sum += $products[$id - 1]['price'] * $quantity;
                 $content .= "
                     <div class='col-4 text-white'>
                         <div class='bg-dark p-5 rounded'>
                             <form method='POST'>
                                 <input name='delate' type='hidden' value='{$id}'>
-                                <h3>{$products[$id-1]['product_name']}</h3>
-                                <h5 class='text-white-50'>{$products[$id-1]['category_name']}</h5>
+                                <h3>{$products[$id - 1]['product_name']}</h3>
+                                <h5 class='text-white-50'>{$products[$id - 1]['category_name']}</h5>
                                 <h5 class='text-white-50'>Кол-во. {$quantity}</h5>
-                                <h5>{$products[$id-1]['price']} руб.</h5>
+                                <h5>{$products[$id - 1]['price']} руб.</h5>
                                 <button type='submit'>Удалить</button>
                             </form>
                         </div>
@@ -43,7 +43,7 @@ class BasketController extends Controller
             if ($sum > 0) $sum = "<h2 class='text-center mt-5'>Общая стоимость корзины: {$sum} руб.</h2>";
             else $sum = '';
         }
-        
+
 
         $this->render('basket', [
             'title' => 'Корзина',

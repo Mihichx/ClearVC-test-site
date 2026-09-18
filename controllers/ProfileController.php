@@ -6,34 +6,37 @@ use Core\Controller;
 use Core\Helpers\Image;
 
 class ProfileController extends Controller
-{   
-    public function auth($stmt)
+{
+    public function auth(array $stmt)
     {
         $_SESSION['user'] = [
             'id'    => $stmt['id'],
             'login' => $stmt['login'],
             'role' => $stmt['role_id'],
-            'basket'=> []
+            'basket' => []
         ];
     }
 
-    public function logout($stmt)
+    public function logout(array $stmt)
     {
         $_SESSION['user'] = [
             'id'    => $stmt[0]['id'],
             'login' => $stmt[0]['login'],
             'role' => $stmt[0]['role'],
-            'basket'=> []
+            'basket' => []
         ];
     }
 
     public function profile()
     {
-        if (empty($_SESSION['user'])) { header('Location: /login'); }
-        
-        $this->recoveryIMG($this->db);
+        if (empty($_SESSION['user'])) {
+            header('Location: /login');
+            exit;
+        }
 
-        //unset($_SESSION['user']);
+        $this->recoveryIMG();
+
+        // unset($_SESSION['user']);
 
         $this->render('profile', [
             'title' => 'Профиль',
@@ -43,7 +46,9 @@ class ProfileController extends Controller
 
     public function login()
     {
-        if (!empty($_SESSION['user'])) { header('Location: /profile'); }
+        if (!empty($_SESSION['user'])) {
+            header('Location: /profile');
+        }
 
         $this->render('login', [
             'title' => 'Вход'
@@ -59,20 +64,20 @@ class ProfileController extends Controller
 
     public function index()
     {
-        if (empty($_POST['name'])) { 
+        if (empty($_POST['name'])) {
             $_SESSION['error'] = 'Введите имя';
             header('Location: /login');
             exit;
         }
 
-        if (empty($_POST['password'])) { 
+        if (empty($_POST['password'])) {
             $_SESSION['error'] = 'Введите пароль';
             header('Location: /login');
             exit;
         }
 
         $name = $_POST['name'];
-        
+
         $stmt = $this->db->prepare("SELECT * FROM `users` WHERE `login` = ?");
         $stmt->execute([$name]);
         $stmt = $stmt->fetch();
@@ -100,25 +105,25 @@ class ProfileController extends Controller
 
     public function store()
     {
-         if (empty($_POST['name'])) { 
+        if (empty($_POST['name'])) {
             $_SESSION['error'] = 'Введите имя';
             header('Location: /register');
             exit;
         }
-        
-        if (empty($_POST['password'])) { 
+
+        if (empty($_POST['password'])) {
             $_SESSION['error'] = 'Введите пароль';
             header('Location: /register');
             exit;
         }
 
-        if (empty($_POST['password1'])) { 
+        if (empty($_POST['password1'])) {
             $_SESSION['error'] = 'Введите повторно пароль';
             header('Location: /register');
             exit;
         }
 
-        if (mb_strlen($_POST['name'], 'UTF-8') < 4) { 
+        if (mb_strlen($_POST['name'], 'UTF-8') < 4) {
             $_SESSION['error'] = 'Имя должно быть больше 4 символов';
             header('Location: /register');
             exit;
@@ -129,20 +134,20 @@ class ProfileController extends Controller
         $stmt->execute([$name]);
         $stmt = $stmt->fetch();
 
-        if ($stmt) { 
+        if ($stmt) {
             $_SESSION['error'] = 'Логин занят';
             header('Location: /register');
             exit;
         }
 
-        if ($_POST['password'] != $_POST['password1']) { 
+        if ($_POST['password'] != $_POST['password1']) {
             $_SESSION['error'] = 'Пароли разные';
             header('Location: /register');
             exit;
         }
 
         $password = $_POST['password'];
-        
+
         $stmt1 = $this->db->prepare("INSERT INTO `users`(`login`, `password`, `role_id`) VALUES (?, ?, ?)");
         $stmt1->execute([$name, password_hash($password, PASSWORD_DEFAULT), 1]);
 
@@ -158,7 +163,7 @@ class ProfileController extends Controller
         exit;
     }
 
-    public function deleteIMG() 
+    public function deleteIMG()
     {
         Image::delete($this->db);
 
@@ -166,7 +171,7 @@ class ProfileController extends Controller
         exit;
     }
 
-    public function recoveryIMG() 
+    public function recoveryIMG()
     {
         $user_id = $_SESSION['user']['id'];
         $user_name = $_SESSION['user']['login'];
@@ -192,7 +197,7 @@ class ProfileController extends Controller
                 $stmt = $this->db->prepare("INSERT INTO `avatar` (`user_id`, `name`) VALUES (?, ?)");
                 $stmt->execute([$user_id, $fileName]);
 
-                break; 
+                break;
             }
         }
     }
